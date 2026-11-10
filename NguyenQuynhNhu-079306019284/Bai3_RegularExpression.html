@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bài 3 - Regular Expression</title><style>
+body{font-family:Arial;background:#eef2f8;padding:25px}.box{max-width:650px;margin:auto;background:white;padding:25px;border-radius:12px}
+label{display:block;margin-top:15px}input{width:100%;padding:10px;margin-top:6px;border:1px solid #aaa;border-radius:6px}
+button{margin-top:20px;padding:11px 18px;background:#263b63;color:white;border:0;border-radius:6px}.msg{font-size:14px;margin-top:5px}.ok{color:green}.err{color:#c22}
+</style></head><body><div class="box"><h1>Kiểm tra dữ liệu bằng Regular Expression</h1>
+<form id="form">
+<label>Họ tên</label><input id="name" placeholder="Nguyễn Văn A"><div id="nameMsg" class="msg"></div>
+<label>Email</label><input id="email" placeholder="abc@gmail.com"><div id="emailMsg" class="msg"></div>
+<label>Số điện thoại (10 chữ số, bắt đầu bằng 0)</label><input id="phone" placeholder="0912345678"><div id="phoneMsg" class="msg"></div>
+<label>Mật khẩu (ít nhất 8 ký tự, có chữ và số)</label><input id="password" type="password"><div id="passwordMsg" class="msg"></div>
+<button type="submit">Kiểm tra</button></form><h3 id="result"></h3></div>
+<script>
+const rules=[
+ {id:"name",regex:/^[\p{L}\s]{2,}$/u,msg:"Tên chỉ gồm chữ cái và khoảng trắng, tối thiểu 2 ký tự."},
+ {id:"email",regex:/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,msg:"Email chưa đúng định dạng."},
+ {id:"phone",regex:/^0\d{9}$/,msg:"Số điện thoại phải có 10 chữ số và bắt đầu bằng 0."},
+ {id:"password",regex:/^(?=.*[A-Za-z])(?=.*\d).{8,}$/,msg:"Mật khẩu cần ít nhất 8 ký tự, gồm chữ và số."}
+];
+document.getElementById("form").addEventListener("submit",e=>{
+ e.preventDefault();let valid=true;
+ rules.forEach(r=>{const ok=r.regex.test(document.getElementById(r.id).value.trim());const el=document.getElementById(r.id+"Msg");el.textContent=ok?"Hợp lệ":r.msg;el.className="msg "+(ok?"ok":"err");if(!ok)valid=false;});
+ document.getElementById("result").textContent=valid?"Tất cả dữ liệu hợp lệ!":"Vui lòng kiểm tra lại thông tin.";
+});
+</script></body></html>

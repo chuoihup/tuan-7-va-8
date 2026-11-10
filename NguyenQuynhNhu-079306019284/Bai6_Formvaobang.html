@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bài 6 - Nhập liệu vào bảng</title><style>
+body{font-family:Arial;background:#f2f4f8;padding:25px}.container{max-width:900px;margin:auto;background:white;padding:25px;border-radius:12px}
+.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+label{display:block;margin-bottom:5px}input,select{width:100%;padding:10px;border:1px solid #aaa;border-radius:6px}
+button{padding:10px 16px;background:#263b63;color:white;border:0;border-radius:6px;cursor:pointer;margin-top:15px}
+table{width:100%;border-collapse:collapse;margin-top:22px}th,td{border:1px solid #ccc;padding:10px;text-align:left}th{background:#263b63;color:white}
+.delete{background:#bd3434;margin:0;padding:7px 10px}
+</style></head><body><div class="container"><h1>Quản lý danh sách sinh viên</h1>
+<form id="studentForm"><div class="formgrid">
+<div><label>Họ tên</label><input id="name" required></div>
+<div><label>Mã sinh viên</label><input id="code" required></div>
+<div><label>Email</label><input id="email" type="email" required></div>
+<div><label>Điểm</label><input id="score" type="number" min="0" max="10" step="0.1" required></div>
+</div><button type="submit">Thêm vào bảng</button></form>
+<table><thead><tr><th>STT</th><th>Họ tên</th><th>MSSV</th><th>Email</th><th>Điểm</th><th>Xếp loại</th><th>Thao tác</th></tr></thead><tbody id="studentList"></tbody></table>
+<p id="count">Tổng số sinh viên: 0</p></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(function(){
+ let students=[];
+ function render(){
+  $("#studentList").empty();
+  students.forEach((s,i)=>{
+   const rank=s.score>=8?"Giỏi":s.score>=6.5?"Khá":s.score>=5?"Trung bình":"Yếu";
+   const row=$("<tr>");
+   [i+1,s.name,s.code,s.email,s.score,rank].forEach(v=>$("<td>").text(v).appendTo(row));
+   $("<td>").append($("<button>").addClass("delete").text("Xóa").on("click",()=>{students.splice(i,1);render();})).appendTo(row);
+   $("#studentList").append(row);
+  });
+  $("#count").text("Tổng số sinh viên: "+students.length);
+ }
+ $("#studentForm").on("submit",function(e){
+  e.preventDefault();
+  const student={name:$("#name").val().trim(),code:$("#code").val().trim(),email:$("#email").val().trim(),score:Number($("#score").val())};
+  if(students.some(s=>s.code.toLowerCase()===student.code.toLowerCase())){alert("Mã sinh viên đã tồn tại.");return;}
+  if(student.score<0||student.score>10){alert("Điểm phải từ 0 đến 10.");return;}
+  students.push(student);render();this.reset();$("#name").trigger("focus");
+ });
+});
+</script></body></html>

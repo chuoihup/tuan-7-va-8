@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 1 - Gallery</title>
+<style>
+*{box-sizing:border-box}body{font-family:Arial,sans-serif;margin:0;background:#f4f6fb;color:#222}
+header{text-align:center;padding:28px;background:#263b63;color:white}main{max-width:1000px;margin:25px auto;padding:0 16px}
+.filters{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px}
+button{border:0;border-radius:7px;padding:10px 16px;background:#dce4f3;cursor:pointer}
+button.active,button:hover{background:#263b63;color:white}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.item{background:white;border-radius:12px;overflow:hidden;box-shadow:0 3px 12px #0001;cursor:pointer}
+.item img{width:100%;height:190px;object-fit:cover;display:block}.item p{text-align:center;font-weight:bold}
+#lightbox{display:none;position:fixed;inset:0;background:#000d;align-items:center;justify-content:center;padding:20px}
+#lightbox img{max-width:90vw;max-height:85vh;border:5px solid white;border-radius:8px}
+#close{position:absolute;right:25px;top:20px;background:white;font-size:20px}
+</style></head>
+<body>
+<header><h1>Thư viện ảnh Gallery</h1><p>Chọn danh mục để lọc ảnh, nhấn ảnh để phóng to</p></header>
+<main>
+<div class="filters">
+<button class="active" data-filter="all">Tất cả</button>
+<button data-filter="nature">Thiên nhiên</button>
+<button data-filter="animal">Động vật</button>
+<button data-filter="city">Thành phố</button>
+</div>
+<div class="gallery">
+<div class="item" data-category="nature"><img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=700" alt="Núi và hồ"><p>Thiên nhiên 1</p></div>
+<div class="item" data-category="animal"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=700" alt="Mèo"><p>Động vật 1</p></div>
+<div class="item" data-category="city"><img src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=700" alt="Thành phố"><p>Thành phố 1</p></div>
+<div class="item" data-category="nature"><img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=700" alt="Rừng"><p>Thiên nhiên 2</p></div>
+<div class="item" data-category="animal"><img src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=700" alt="Mèo con"><p>Động vật 2</p></div>
+<div class="item" data-category="city"><img src="https://images.unsplash.com/photo-149城" alt="Kiến trúc" onerror="this.src='https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=700'"><p>Thành phố 2</p></div>
+</div></main>
+<div id="lightbox"><button id="close">Đóng ✕</button><img id="largeImage" alt="Ảnh phóng to"></div>
+<script>
+const filterButtons=document.querySelectorAll(".filters button");
+const items=document.querySelectorAll(".item");
+filterButtons.forEach(button=>button.addEventListener("click",()=>{
+  filterButtons.forEach(b=>b.classList.remove("active")); button.classList.add("active");
+  const filter=button.dataset.filter;
+  items.forEach(item=>item.style.display=(filter==="all"||item.dataset.category===filter)?"block":"none");
+}));
+const lightbox=document.getElementById("lightbox");
+items.forEach(item=>item.addEventListener("click",()=>{
+  document.getElementById("largeImage").src=item.querySelector("img").src;
+  lightbox.style.display="flex";
+}));
+document.getElementById("close").addEventListener("click",()=>lightbox.style.display="none");
+lightbox.addEventListener("click",e=>{if(e.target===lightbox)lightbox.style.display="none"});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")lightbox.style.display="none"});
+</script></body></html>
