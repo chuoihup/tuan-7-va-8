@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bài 4 - jQuery và Regular Expression</title><style>
+body{font-family:Arial;background:#f2f4f8;padding:25px}.box{max-width:650px;margin:auto;background:white;padding:25px;border-radius:12px}
+label{display:block;margin-top:14px}input{width:100%;padding:10px;border:1px solid #aaa;border-radius:6px;margin-top:5px}
+button{margin-top:18px;padding:10px 18px;background:#263b63;color:white;border:0;border-radius:6px}.error{color:#c22}.success{color:green}
+</style></head><body><div class="box"><h1>Đăng ký tài khoản</h1>
+<form id="register">
+<label>Username (5-15 ký tự, chữ và số)</label><input id="username">
+<label>Email</label><input id="email">
+<label>Số điện thoại</label><input id="phone">
+<button type="submit">Đăng ký</button></form><p id="message"></p></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(function(){
+ $("#register").on("submit",function(e){
+  e.preventDefault();
+  const checks=[
+   {value:$("#username").val().trim(),regex:/^[A-Za-z0-9]{5,15}$/,name:"Username"},
+   {value:$("#email").val().trim(),regex:/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,name:"Email"},
+   {value:$("#phone").val().trim(),regex:/^0\d{9}$/,name:"Số điện thoại"}
+  ];
+  const errors=checks.filter(x=>!x.regex.test(x.value)).map(x=>x.name);
+  if(errors.length){$("#message").removeClass("success").addClass("error").text("Thông tin chưa hợp lệ: "+errors.join(", "));}
+  else{$("#message").removeClass("error").addClass("success").text("Đăng ký thành công!");}
+ });
+});
+</script></body></html>
